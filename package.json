@@ -1,0 +1,24 @@
+{
+  "name": "posenet-similarity",
+  "version": "0.1.0",
+  "description": "A package helps to quickly get the similarity (distance) between two poses estimated by tfjs Posenet",
+  "main": "dist/index.js",
+  "repository": "freshsomebody/posenet-similarity",
+  "license": "MIT",
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "test": "jest",
+    "lint": "eslint src/**"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "@typescript-eslint/eslint-plugin": "^1.6.0",
+    "@typescript-eslint/parser": "^1.6.0",
+    "eslint": "^5.16.0",
+    "jest": "^24.7.1",
+    "rimraf": "^2.6.3",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.4.1"
+  }
+}

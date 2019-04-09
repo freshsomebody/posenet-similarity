@@ -1,0 +1,60 @@
+[
+  {
+    "score": 0.429,
+    "keypoints": [
+      {
+        "position": {
+          "x": 2,
+          "y": 0
+        },
+        "part": "nose",
+        "score": 0.9
+      },
+      {
+        "position": {
+          "x": 2,
+          "y": 2
+        },
+        "part": "leftEye",
+        "score": 0.9
+      },
+      {
+        "position": {
+          "x": 2,
+          "y": 0
+        },
+        "part": "rightEye",
+        "score": 0.7
+      }
+    ]
+  },
+  {
+    "score": 0.134,
+    "keypoints": [
+      {
+        "position": {
+          "x": 0,
+          "y": 3
+        },
+        "part": "nose",
+        "score": 0.002
+      },
+      {
+        "position": {
+          "x": 3,
+          "y": 3
+        },
+        "part": "leftEye",
+        "score": 0.999
+      },
+      {
+        "position": {
+          "x": 3,
+          "y": 0
+        },
+        "part": "rightEye",
+        "score": 0.998
+      }
+    ]
+  }
+]
