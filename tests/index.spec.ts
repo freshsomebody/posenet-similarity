@@ -1,7 +1,26 @@
 import * as funcs from '../src/index';
 import mockPoseData from './mock-pose-data.json';
+import { Pose } from '../src/types'
 
 describe('index.ts', () => {
+  test('poseSimilarity throws error if receiving wrong pose objects', () => {
+    expect(() => {
+      funcs.poseSimilarity({} as Pose, mockPoseData[1])
+    }).toThrow(/Wrong pose parameters/);
+
+    expect(() => {
+      funcs.poseSimilarity(mockPoseData[0], {} as Pose)
+    }).toThrow(/Wrong pose parameters/);
+
+    expect(() => {
+      funcs.poseSimilarity({ keypoints: [] }, mockPoseData[1])
+    }).toThrow(/Wrong pose parameters/);
+
+    expect(() => {
+      funcs.poseSimilarity(mockPoseData[0], { keypoints: [] })
+    }).toThrow(/Wrong pose parameters/);
+  })
+
   test('poseSimilarity returns correct result with default strategy', () => {
     expect(funcs.poseSimilarity(mockPoseData[0], mockPoseData[1])).toBeCloseTo(0.68, 2);
   });
@@ -20,11 +39,13 @@ describe('index.ts', () => {
     expect(funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], options)).toBeCloseTo(0.68, 2);
   });
 
-  test('poseSimilarity returns error message if passing a wrong strategy option', () => {
+  test('poseSimilarity throws error if passing a wrong strategy option', () => {
     const options = {
       strategy: 'wrongStrategy'
     }
-    expect(funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], options)).toMatch(/Wrong strategy option/);
+    expect(() => {
+      funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], options)
+    }).toThrow(/Wrong strategy option/);
   });
 
   test('convertPoseToVectors returns correct results', () => {

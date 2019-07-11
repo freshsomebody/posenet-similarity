@@ -1,6 +1,13 @@
 import { Pose, Options } from './types'
 
-export function poseSimilarity(pose1: Pose, pose2: Pose, overridenOptions?: Options): number | string {
+export function poseSimilarity(pose1: Pose, pose2: Pose, overridenOptions?: Options): number | Error {
+  if (
+    !pose1 || !pose1.keypoints || pose1.keypoints.length === 0 ||
+    !pose2 || !pose2.keypoints || pose2.keypoints.length === 0
+  ) {
+    throw new Error('[Wrong pose parameters] Please check your pose objects again.');
+  }
+
   let [vectorPose1XY, vecotPose1Transform, vectorPose1Confidences] = convertPoseToVectors(pose1);
   let [vectorPose2XY, vecotPose2Transform] = convertPoseToVectors(pose2);
 
@@ -14,7 +21,7 @@ export function poseSimilarity(pose1: Pose, pose2: Pose, overridenOptions?: Opti
   const defaultOptions: Options = {
     strategy: 'weightedDistance'
   };
-  const options = Object.assign({}, defaultOptions, overridenOptions)
+  const options = Object.assign({}, defaultOptions, overridenOptions);
 
   switch(options.strategy) {
     case 'cosineDistance':
@@ -22,7 +29,7 @@ export function poseSimilarity(pose1: Pose, pose2: Pose, overridenOptions?: Opti
     case 'weightedDistance':
       return weightedDistanceMatching(vectorPose1XY, vectorPose2XY, vectorPose1Confidences);
     default:
-      return `[Wrong strategy option] It should be either 'cosineDistance' or 'weightedDistance' (default).`
+      throw new Error(`[Wrong strategy option] It should be either 'cosineDistance' or 'weightedDistance' (default).`);
   }
 }
 
