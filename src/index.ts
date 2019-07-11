@@ -51,7 +51,7 @@ export function convertPoseToVectors(pose: Pose): number[][] {
 
   let translateX = Number.POSITIVE_INFINITY;
   let translateY = Number.POSITIVE_INFINITY;
-  let scaler = -1;
+  let scaler = Number.NEGATIVE_INFINITY;
 
   let vectorConfidenceSum = 0;
   let vectorConfidences: number[] = [];
