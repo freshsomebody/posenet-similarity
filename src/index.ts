@@ -1,10 +1,6 @@
 import { Pose, Options } from './types'
 
-const defaultOptions: Options = {
-  strategy: 'weightedDistance'
-};
-
-export function poseSimilarity(pose1: Pose, pose2: Pose, options: Options = defaultOptions): number | string {
+export function poseSimilarity(pose1: Pose, pose2: Pose, overridenOptions?: Options): number | string {
   let [vectorPose1XY, vecotPose1Transform, vectorPose1Confidences] = convertPoseToVectors(pose1);
   let [vectorPose2XY, vecotPose2Transform] = convertPoseToVectors(pose2);
 
@@ -13,6 +9,12 @@ export function poseSimilarity(pose1: Pose, pose2: Pose, options: Options = defa
 
   vectorPose1XY = L2Normalization(vectorPose1XY);
   vectorPose2XY = L2Normalization(vectorPose2XY);
+
+  // merge options
+  const defaultOptions: Options = {
+    strategy: 'weightedDistance'
+  };
+  const options = Object.assign({}, defaultOptions, overridenOptions)
 
   switch(options.strategy) {
     case 'cosineDistance':

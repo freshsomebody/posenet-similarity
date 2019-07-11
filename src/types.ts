@@ -11,5 +11,5 @@ export interface Keypoint {
 };
 
 export interface Options {
-  strategy: string
+  strategy?: string
 };

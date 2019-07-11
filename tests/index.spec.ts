@@ -13,6 +13,13 @@ describe('index.ts', () => {
     expect(funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], options)).toBeCloseTo(1, 2);
   });
 
+  test('poseSimilarity returns correct result with strategy weightedDistance', () => {
+    const options = {
+      strategy: 'weightedDistance'
+    }
+    expect(funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], options)).toBeCloseTo(0.68, 2);
+  });
+
   test('poseSimilarity returns error message if passing a wrong strategy option', () => {
     const options = {
       strategy: 'wrongStrategy'
