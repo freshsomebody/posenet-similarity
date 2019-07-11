@@ -12,7 +12,11 @@ import { poseSimilarity } from 'posenet-similarity';
 
 // posenet setup and estimation of poses
 
-poseSimilarity(pose1, pose2);
+// calculate with the default strategy
+const weightedDistance = poseSimilarity(pose1, pose2);
+
+// calculate with the specified strategy
+const cosineDistance = poseSimilarity(pose1, pose2, { strategy: 'cosineDistance' });
 ```
 
 ### Syntax
@@ -21,7 +25,7 @@ poseSimilarity(pose1, pose2[, options])
 ```
 #### Parameters
 pose1, pose2 : Object
-- The single-pose objects estimate by Posenet
+- The single-pose objects estimated by Posenet
 - Example structure can be referred under [Posenet README](https://github.com/tensorflow/tfjs-models/tree/master/posenet#single-person-pose-estimation)
 
 options : Object (optional)
@@ -34,6 +38,11 @@ options : Object (optional)
   */
 }
 ```
+
+#### Returns
+similarity/ distance : Number
+- **Bigger** the value means **more similar** when using **similarity based strategies**
+- **Smaller** the value means **more similar** when using **distance based strategies** (e.g. cosineDistance and weightedDistance)
 
 ## References
 - [tfjs-models/Posenet](https://github.com/tensorflow/tfjs-models/tree/master/posenet)
