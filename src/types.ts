@@ -7,9 +7,16 @@ export interface Keypoint {
     y: number,
     x: number
   },
+  part: string,
   score: number
 };
 
 export interface Options {
-  strategy?: string
+  strategy?: string,
+  customWeight?: WeightOption
 };
+
+export interface WeightOption {
+  mode: string,
+  scores: any
+}

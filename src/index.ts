@@ -1,14 +1,21 @@
-import { Pose, Options } from './types'
+import { Pose, Options, WeightOption } from './types'
 
 export function poseSimilarity(pose1: Pose, pose2: Pose, overridenOptions?: Options): number | Error {
+  // check inputted poses
   if (
     !pose1 || !pose1.keypoints || pose1.keypoints.length === 0 ||
     !pose2 || !pose2.keypoints || pose2.keypoints.length === 0
   ) {
-    throw new Error('[Wrong pose parameters] Please check your pose objects again.');
+    throw new Error('[Bad pose parameters] Please check your pose objects again.');
   }
 
-  let [vectorPose1XY, vecotPose1Transform, vectorPose1Confidences] = convertPoseToVectors(pose1);
+  // merge options
+  const defaultOptions: Options = {
+    strategy: 'weightedDistance'
+  };
+  const options = Object.assign({}, defaultOptions, overridenOptions);
+
+  let [vectorPose1XY, vecotPose1Transform, vectorPose1Confidences] = convertPoseToVectors(pose1, options.customWeight);
   let [vectorPose2XY, vecotPose2Transform] = convertPoseToVectors(pose2);
 
   vectorPose1XY = scaleAndTranslate(vectorPose1XY, vecotPose1Transform);
@@ -17,19 +24,14 @@ export function poseSimilarity(pose1: Pose, pose2: Pose, overridenOptions?: Opti
   vectorPose1XY = L2Normalization(vectorPose1XY);
   vectorPose2XY = L2Normalization(vectorPose2XY);
 
-  // merge options
-  const defaultOptions: Options = {
-    strategy: 'weightedDistance'
-  };
-  const options = Object.assign({}, defaultOptions, overridenOptions);
-
+  // execute strategy
   switch(options.strategy) {
     case 'cosineDistance':
       return cosineDistanceMatching(cosineSimilarity(vectorPose1XY, vectorPose2XY));
     case 'weightedDistance':
       return weightedDistanceMatching(vectorPose1XY, vectorPose2XY, vectorPose1Confidences);
     default:
-      throw new Error(`[Wrong strategy option] It should be either 'cosineDistance' or 'weightedDistance' (default).`);
+      throw new Error(`[Bad strategy option] It should be either 'cosineDistance' or 'weightedDistance' (default).`);
   }
 }
 
@@ -43,20 +45,30 @@ export function poseSimilarity(pose1: Pose, pose2: Pose, overridenOptions?: Opti
  *          [x1, y1, x2, y2, ... , x17, y17]
  * [1] = The values to translate and scale pose keypoints x, y vector.
  *          [translateX, translateY, scaler]
- * [2] = The confidences (score) of pose keypoints and the sum of them
- *          [confidence1, confidence2, ..., confidence17, sumOfConfidences]
+ * [2] = The scores of pose keypoints and the sum of them
+ *          [score1, score2, ..., score17, sumOfScores]
+ *          Will be used for the weightedDistance strategy
  */
-export function convertPoseToVectors(pose: Pose): number[][] {
+export function convertPoseToVectors(pose: Pose, weightOption?: WeightOption): number[][] {
   let vectorPoseXY: number[] = [];
 
   let translateX = Number.POSITIVE_INFINITY;
   let translateY = Number.POSITIVE_INFINITY;
   let scaler = Number.NEGATIVE_INFINITY;
 
-  let vectorConfidenceSum = 0;
-  let vectorConfidences: number[] = [];
+  let vectorScoresSum = 0;
+  let vectorScores: number[] = [];
 
-  pose.keypoints.forEach(point => {
+  // get weightOption if exists
+  let mode: string, scores: any;
+  if (weightOption) {
+    mode = weightOption.mode;
+    if (typeof weightOption.scores !== 'object') throw new TypeError(`[Bad customWeight option] scores must be Object or Number[].
+      Please refer the document https://github.com/freshsomebody/posenet-similarity to set it correctly.`);
+    scores = weightOption.scores
+  }
+
+  pose.keypoints.forEach((point, index) => {
     const x: number = point.position.x;
     const y: number = point.position.y;
 
@@ -66,15 +78,41 @@ export function convertPoseToVectors(pose: Pose): number[][] {
     translateY = Math.min(translateY, y);
     scaler = Math.max(scaler, Math.max(x, y));
 
-    vectorConfidenceSum += point.score;
-    vectorConfidences.push(point.score);
+    let score = point.score;
+    // modify original score according to the weightOption
+    if (scores) {
+      let scoreModifier: boolean | number = false;
+      // try to get scores from the weightOption
+      if (scores[point.part] || scores[point.part] === 0) scoreModifier = scores[point.part]
+      if (scores[index] || scores[index] === 0) scoreModifier = scores[index]
+
+      // manipulate the original score
+      if ((scoreModifier || scoreModifier === 0) && typeof scoreModifier === 'number') {
+        switch (mode) {
+          case 'multiply':
+            score *= scoreModifier;
+            break;
+          case 'replace':
+            score = scoreModifier;
+            break;
+          case 'add':
+            score += scoreModifier;
+            break;
+          default:
+            throw new Error(`[Bad customWeight option] A mode must be specified and should be either 'multiply', 'replace' or 'add'`)
+        }
+      }
+    }
+
+    vectorScoresSum += score;
+    vectorScores.push(score);
   });
-  vectorConfidences.push(vectorConfidenceSum);
+  vectorScores.push(vectorScoresSum);
 
   return [
     vectorPoseXY,
     [translateX / scaler, translateY / scaler, scaler],
-    vectorConfidences
+    vectorScores
   ]
 }
 
