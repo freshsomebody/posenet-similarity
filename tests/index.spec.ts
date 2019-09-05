@@ -3,22 +3,26 @@ import mockPoseData from './mock-pose-data.json';
 import { Pose, Options, WeightOption } from '../src/types'
 
 describe('index.ts', () => {
+  const badPoseErrMsg = new RegExp(/Bad pose parameters/);
+  const badStrategyErrMsg = new RegExp(/Bad strategy option/);
+  const badCustomWeightErrMsg = new RegExp(/Bad customWeight option/);
+
   test('poseSimilarity throws error if receiving bad pose objects', () => {
     expect(() => {
       funcs.poseSimilarity({} as Pose, mockPoseData[1])
-    }).toThrow(/Bad pose parameters/);
+    }).toThrow(badPoseErrMsg);
 
     expect(() => {
       funcs.poseSimilarity(mockPoseData[0], {} as Pose)
-    }).toThrow(/Bad pose parameters/);
+    }).toThrow(badPoseErrMsg);
 
     expect(() => {
       funcs.poseSimilarity({ keypoints: [] }, mockPoseData[1])
-    }).toThrow(/Bad pose parameters/);
+    }).toThrow(badPoseErrMsg);
 
     expect(() => {
       funcs.poseSimilarity(mockPoseData[0], { keypoints: [] })
-    }).toThrow(/Bad pose parameters/);
+    }).toThrow(badPoseErrMsg);
   });
 
   test('poseSimilarity throws error if receiving a bad strategy option', () => {
@@ -27,7 +31,7 @@ describe('index.ts', () => {
     }
     expect(() => {
       funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], options)
-    }).toThrow(/Bad strategy option/);
+    }).toThrow(badStrategyErrMsg);
   });
 
   test('poseSimilarity throws error if receiving a bad customWeight option', () => {
@@ -39,29 +43,29 @@ describe('index.ts', () => {
     }
     expect(() => {
       funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], badOption)
-    }).toThrow(/Bad customWeight option/);
+    }).toThrow(badCustomWeightErrMsg);
 
     // bad mode
     badOption.customWeight = { mode: 'bad', scores: { nose: 1 } } as WeightOption;
     expect(() => {
       funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], badOption)
-    }).toThrow(/Bad customWeight option/);
+    }).toThrow(badCustomWeightErrMsg);
 
     // bad scores
     badOption.customWeight = { mode: 'multiply', scores: 1 } as WeightOption;
     expect(() => {
       funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], badOption)
-    }).toThrow(/Bad customWeight option/);
+    }).toThrow(badCustomWeightErrMsg);
 
     badOption.customWeight.scores = '{ nose: 1 }';
     expect(() => {
       funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], badOption)
-    }).toThrow(/Bad customWeight option/);
+    }).toThrow(badCustomWeightErrMsg);
 
     badOption.customWeight.scores = true;
     expect(() => {
       funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], badOption)
-    }).toThrow(/Bad customWeight option/);
+    }).toThrow(badCustomWeightErrMsg);
   });
 
   test('poseSimilarity returns correct result with default strategy', () => {
@@ -123,79 +127,5 @@ describe('index.ts', () => {
       scores: { leftEye: 0.5 }
     }
     expect(funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], options)).toBeCloseTo(0.73, 2);
-  });
-
-  test('convertPoseToVectors returns correct results', () => {
-    // without weightOption
-    expect(funcs.convertPoseToVectors(mockPoseData[0])).toEqual([
-      [2, 0, 2, 2, 2, 0],
-      [1, 0, 2],
-      [0.9, 0.9, 0.7, (0.9 + 0.9 + 0.7)]
-    ]);
-
-    // with weightOption in scale mode
-    expect(funcs.convertPoseToVectors(mockPoseData[0], { mode: 'multiply', scores: { leftEye: 2 } })).toEqual([
-      [2, 0, 2, 2, 2, 0],
-      [1, 0, 2],
-      [0.9, 1.8, 0.7, (0.9 + 1.8 + 0.7)]
-    ]);
-    expect(funcs.convertPoseToVectors(mockPoseData[0], { mode: 'multiply', scores: [0, 2] })).toEqual([
-      [2, 0, 2, 2, 2, 0],
-      [1, 0, 2],
-      [0, 1.8, 0.7, (0 + 1.8 + 0.7)]
-    ]);
-
-    // with weightOption in replace mode
-    expect(funcs.convertPoseToVectors(mockPoseData[0], { mode: 'replace', scores: { leftEye: 2 } })).toEqual([
-      [2, 0, 2, 2, 2, 0],
-      [1, 0, 2],
-      [0.9, 2, 0.7, (0.9 + 2 + 0.7)]
-    ]);
-    expect(funcs.convertPoseToVectors(mockPoseData[0], { mode: 'replace', scores: [0, 2] })).toEqual([
-      [2, 0, 2, 2, 2, 0],
-      [1, 0, 2],
-      [0, 2, 0.7, (0 + 2 + 0.7)]
-    ]);
-
-    // with weightOption in addition mode
-    expect(funcs.convertPoseToVectors(mockPoseData[0], { mode: 'add', scores: { leftEye: 2 } })).toEqual([
-      [2, 0, 2, 2, 2, 0],
-      [1, 0, 2],
-      [0.9, 2.9, 0.7, (0.9 + 2.9 + 0.7)]
-    ]);
-    expect(funcs.convertPoseToVectors(mockPoseData[0], { mode: 'add', scores: [0, 2] })).toEqual([
-      [2, 0, 2, 2, 2, 0],
-      [1, 0, 2],
-      [0.9, 2.9, 0.7, (0.9 + 2.9 + 0.7)]
-    ]);
-  });
-
-  test('scaleAndTranslate returns correct result', () => {
-    const mockVectorPoseXY = [4, 8, 2, 4];
-    const mocktTansformValues = [0.25, 0.5, 8]
-    expect(funcs.scaleAndTranslate(mockVectorPoseXY, mocktTansformValues)).toEqual([0.25, 0.5, 0, 0])
-  });
-
-  test('L2Normalization returns correct result', () => {
-    const mockVectorPoseXY = [3, 4];
-    expect(funcs.L2Normalization(mockVectorPoseXY)).toEqual([3 / 5, 4 / 5]);
-  });
-
-  test('cosineSimilarity returns correct result', () => {
-    const vector1 = [1, 0, 1, 1, 1];
-    const vector2 = [0, 1, 1, 1, 1];
-    expect(funcs.cosineSimilarity(vector1, vector2)).toBe(0.75);
-  });
-
-  test('cosineDistanceMatching returns correct result', () => {
-    const cosSimilarity = 0.75
-    expect(funcs.cosineDistanceMatching(cosSimilarity)).toBeCloseTo(0.7, 1);
-  });
-
-  test('weightedDistanceMatching returns correct result', () => {
-    const vector1 = [1, 0, 1, 1, 1, 0];
-    const vector2 = [0, 1, 1, 1, 1, 0];
-    const vectorConfidences = [0.9, 0.9, 0.7, 2.5];
-    expect(funcs.weightedDistanceMatching(vector1, vector2, vectorConfidences)).toBeCloseTo(0.72, 2);
   });
 });

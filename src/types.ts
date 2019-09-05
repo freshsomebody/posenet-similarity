@@ -18,5 +18,5 @@ export interface Options {
 
 export interface WeightOption {
   mode: string,
-  scores: any
+  scores: Object | number[]
 }
