@@ -38,7 +38,7 @@ export function convertPoseToVectors(pose: Pose, weightOption?: WeightOption): n
   let vectorScores: number[] = [];
 
   // get weightOption if exists
-  let mode: string, scores: Object | number[];
+  let mode: string, scores: Record<string, number> | number[];
   if (weightOption) {
     mode = weightOption.mode;
     if (typeof weightOption.scores !== 'object') throw new TypeError(`[Bad customWeight option] scores must be Object or Number[].

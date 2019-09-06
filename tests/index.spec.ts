@@ -26,9 +26,26 @@ describe('index.ts', () => {
   });
 
   test('poseSimilarity throws error if receiving a bad strategy option', () => {
-    const options = {
+    // bad string strategies
+    let options = {
       strategy: 'badStrategy'
     }
+    expect(() => {
+      funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], options)
+    }).toThrow(badStrategyErrMsg);
+
+    // bad types of strategies
+    options.strategy = 1;
+    expect(() => {
+      funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], options)
+    }).toThrow(badStrategyErrMsg);
+
+    options.strategy = true;
+    expect(() => {
+      funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], options)
+    }).toThrow(badStrategyErrMsg);
+
+    options.strategy = [1, 2];
     expect(() => {
       funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], options)
     }).toThrow(badStrategyErrMsg);
@@ -70,6 +87,13 @@ describe('index.ts', () => {
 
   test('poseSimilarity returns correct result with default strategy', () => {
     expect(funcs.poseSimilarity(mockPoseData[0], mockPoseData[1])).toBeCloseTo(0.68, 2);
+  });
+
+  test('poseSimilarity returns correct result with strategy cosineDistance', () => {
+    const options: Options = {
+      strategy: 'cosineSimilarity'
+    }
+    expect(funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], options)).toBeCloseTo(0.5, 2);
   });
 
   test('poseSimilarity returns correct result with strategy cosineDistance', () => {
@@ -127,5 +151,12 @@ describe('index.ts', () => {
       scores: { leftEye: 0.5 }
     }
     expect(funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], options)).toBeCloseTo(0.73, 2);
+  });
+
+  test('poseSimilarity returns correct result with a function type of strategy', () => {
+    const options = {
+      strategy: () => 1
+    }
+    expect(funcs.poseSimilarity(mockPoseData[0], mockPoseData[1], options)).toBe(1);
   });
 });

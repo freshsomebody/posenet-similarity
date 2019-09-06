@@ -12,11 +12,11 @@ export interface Keypoint {
 };
 
 export interface Options {
-  strategy?: string,
+  strategy?: string | Function,
   customWeight?: WeightOption
 };
 
 export interface WeightOption {
   mode: string,
-  scores: Object | number[]
+  scores: Record<string, number> | number[]
 }
