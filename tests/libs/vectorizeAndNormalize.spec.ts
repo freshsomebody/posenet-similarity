@@ -49,8 +49,8 @@ describe('vectorizeAndNormalize.ts', () => {
 
   test('scaleAndTranslate returns correct result', () => {
     const mockVectorPoseXY = [4, 8, 2, 4];
-    const mocktTansformValues = [0.25, 0.5, 8]
-    expect(funcs.scaleAndTranslate(mockVectorPoseXY, mocktTansformValues)).toEqual([0.25, 0.5, 0, 0])
+    const mockTransformValues = [0.25, 0.5, 8]
+    expect(funcs.scaleAndTranslate(mockVectorPoseXY, mockTransformValues)).toEqual([0.25, 0.5, 0, 0])
   });
 
   test('L2Normalization returns correct result', () => {
