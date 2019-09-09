@@ -31,7 +31,7 @@ export function poseSimilarity(pose1: Pose, pose2: Pose, overridenOptions?: Opti
       case 'weightedDistance':
         return weightedDistanceMatching(vectorPose1XY, vectorPose2XY, vectorPose1Scores);
       default:
-        throw new Error(`[Bad strategy option] It should be either 'cosineDistance' or 'weightedDistance' (default).`);
+        throw new Error(`[Bad strategy option] It should be either 'cosineSimilarity', 'cosineDistance' or 'weightedDistance' (default).`);
     }
   // if strategy is given by a custom function
   } else if (typeof options.strategy === 'function') {
