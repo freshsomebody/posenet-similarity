@@ -1,5 +1,5 @@
 # PosenetSimilarity
-A package helps to quickly get the similarity (distance) between two poses estimated by [tfjs Posenet](https://github.com/tensorflow/tfjs-models/tree/master/posenet).
+A package helps to quickly get the similarity/ distance between two poses estimated by [tfjs Posenet](https://github.com/tensorflow/tfjs-models/tree/master/posenet).
 
 ## Installation
 via script tag
@@ -13,9 +13,9 @@ npm install posenet-similarity
 ```
 
 ## Example usages
-> NOTE: posenet-similarity doesn't need to work with Posenet. The examples just shows how you might chain the outputs of Posenet with posenet-similarity
+> NOTE: PosenetSimilarity doesn't need Posenet to be installed and work together. The examples just show how you might chain the outputs of Posenet with PosenetSimilarity.
 
-When using posenet-similarity in the browsers, it will expose **psn** globally for accessing the APIs.
+When using PosenetSimilarity in the browsers, it will expose **psn** globally for accessing the APIs.
 ```html
 <html>
   <head>
