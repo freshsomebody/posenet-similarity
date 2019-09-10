@@ -15,7 +15,7 @@ npm install posenet-similarity
 ## Example usages
 > NOTE: PosenetSimilarity doesn't need Posenet to be installed and work together. The examples just show how you might chain the outputs of Posenet with PosenetSimilarity.
 
-When using PosenetSimilarity in the browsers, it will expose **psn** globally for accessing the APIs.
+When using PosenetSimilarity in the browsers, it will expose **pns** globally for accessing the APIs.
 ```html
 <html>
   <head>
@@ -46,7 +46,7 @@ When using PosenetSimilarity in the browsers, it will expose **psn** globally fo
       ])
     }).then(function(poses){
       // Calculate the weighted distance between the two poses
-      var weightedDistance = psn.poseSimilarity(poses[0], poses[1]);
+      var weightedDistance = pns.poseSimilarity(poses[0], poses[1]);
       console.log(weightedDistance)
     })
   </script>
@@ -75,7 +75,7 @@ Promise.all([
   estimatePoseOnImage(pose2ImageElement)
 ]).then(poses => {
   // Calculate the weighted distance between the two poses
-  const weightedDistance = poseSimilarity(pose1, pose2);
+  const weightedDistance = poseSimilarity(poses[0], poses[1]);
   console.log(weightedDistance)
 });
 ```
