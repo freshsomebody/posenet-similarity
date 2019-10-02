@@ -94,6 +94,17 @@ export function convertPoseToVectors(pose: Pose, weightOption?: WeightOption): n
   ]
 }
 
+/**
+ * Scale and translate a pose to size 1*1
+ * 
+ * @param vectorPoseXY The vector of pose keypoints x, y
+ *        [x1, y1, x2, y2, ... , x17, y17]
+ * @param transformValues The values to translate and scale pose keypoints x, y vector
+ *        [translateX, translateY, scaler]
+ * 
+ * @return An scaled and translated pose keypoints x, y vector in size 1*1
+ *          [x1, y1, x2, y2, ... , x17, y17]
+ */
 export function scaleAndTranslate(vectorPoseXY: number[], transformValues: number[]): number[] {
   const [transX, transY, scaler] = transformValues;
 
@@ -104,6 +115,15 @@ export function scaleAndTranslate(vectorPoseXY: number[], transformValues: numbe
   });
 }
 
+/**
+ * L2 nomalize a pose
+ * 
+ * @param vectorPoseXY The vector of pose keypoints x, y
+ *        [x1, y1, x2, y2, ... , x17, y17]
+ * 
+ * @return An L2 normalized pose keypoints x, y vector in size 1*1
+ *          [x1, y1, x2, y2, ... , x17, y17]
+ */
 export function L2Normalization(vectorPoseXY: number[]): number[] {
   let absVectorPoseXY = 0;
   vectorPoseXY.forEach(position => {

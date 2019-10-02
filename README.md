@@ -63,7 +63,7 @@ async function estimatePoseOnImage(imageElement) {
   // Load the posenet model from a checkpoint
   const net = await posenet.load();
   // Estimate the pose on the imageElement
-  const poses = await net.estimateSinglePose(imageElement);
+  const pose = await net.estimateSinglePose(imageElement);
   return pose;
 }
 

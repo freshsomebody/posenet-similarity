@@ -42,3 +42,4 @@ export function poseSimilarity(pose1: Pose, pose2: Pose, overridenOptions?: Opti
 }
 
 export { vectorizeAndNormalize } from './libs/vectorizeAndNormalize';
+export { cosineSimilarity, cosineDistanceMatching, weightedDistanceMatching } from './libs/strategies';
