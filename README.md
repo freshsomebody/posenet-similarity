@@ -1,4 +1,6 @@
 # PosenetSimilarity
+[![Build Status](https://travis-ci.org/freshsomebody/posenet-similarity.svg?branch=master)](https://travis-ci.org/freshsomebody/posenet-similarity)
+
 A package helps to quickly get the similarity/ distance between two poses estimated by [tfjs Posenet](https://github.com/tensorflow/tfjs-models/tree/master/posenet).
 
 ## Installation
