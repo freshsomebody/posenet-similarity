@@ -23,6 +23,21 @@ describe('index.ts', () => {
     expect(() => {
       funcs.poseSimilarity(mockPoseData[0], { keypoints: [] })
     }).toThrow(badPoseErrMsg);
+
+    expect(() => {
+      funcs.poseSimilarity(mockPoseData[0], {
+        keypoints: [
+          {
+            "position": {
+              "x": 0,
+              "y": 3
+            },
+            "part": "nose",
+            "score": 0.002
+          }
+        ]
+      })
+    }).toThrow(badPoseErrMsg);
   });
 
   test('poseSimilarity throws error if receiving a bad strategy option', () => {
