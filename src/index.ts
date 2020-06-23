@@ -5,10 +5,18 @@ import { cosineSimilarity, cosineDistanceMatching, weightedDistanceMatching } fr
 export function poseSimilarity(pose1: Pose, pose2: Pose, overridenOptions?: Options): number | Error {
   // check inputted poses
   if (
-    !pose1 || !pose1.keypoints || pose1.keypoints.length === 0 ||
-    !pose2 || !pose2.keypoints || pose2.keypoints.length === 0
+    !pose1 || !pose1.keypoints ||
+    !pose2 || !pose2.keypoints
   ) {
     throw new Error('[Bad pose parameters] Please check your pose objects again.');
+  }
+
+  if (pose1.keypoints.length === 0 || pose2.keypoints.length === 0) {
+    throw new Error('[Bad pose parameters] Found pose object(s) with empty keypoint.')
+  }
+
+  if (pose1.keypoints.length !== pose2.keypoints.length) {
+    throw new Error('[Bad pose parameters] The keypoint lengths of the two pose objects are not the same.')
   }
 
   // merge options
