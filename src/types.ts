@@ -12,11 +12,12 @@ export interface Keypoint {
 };
 
 export interface Options {
-  strategy?: string | Function,
+  strategy?: 'cosineSimilarity' | 'cosineDistance' | 'weightedDistance' | Function,
   customWeight?: WeightOption
 };
 
 export interface WeightOption {
-  mode: string,
+  mode: WeightOptionMode,
   scores: Record<string, number> | number[]
 }
+export type WeightOptionMode = 'multiply' | 'replace' | 'add'
