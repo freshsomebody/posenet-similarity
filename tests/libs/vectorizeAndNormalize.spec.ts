@@ -1,7 +1,22 @@
 import * as funcs from '../../src/libs/vectorizeAndNormalize';
 import mockPoseData from '../mock-pose-data.json';
+import { WeightOption, WeightOptionMode } from '../../src/types';
 
 describe('vectorizeAndNormalize.ts', () => {
+  test('convertPoseToVectors throws errors if weightOption is invalid', () => {
+    const badCustomWeightErrMsg = new RegExp(/Bad customWeight option/);
+
+    expect(() => funcs.convertPoseToVectors(mockPoseData[0], {} as WeightOption)).toThrow(badCustomWeightErrMsg);
+
+    expect(() => {
+      funcs.convertPoseToVectors(mockPoseData[0], { mode: 'wrong' as WeightOptionMode } as WeightOption)
+    }).toThrow(badCustomWeightErrMsg);
+
+    expect(() => {
+      funcs.convertPoseToVectors(mockPoseData[0], { mode: 'multiply' } as WeightOption)
+    }).toThrow(badCustomWeightErrMsg);
+  })
+
   test('convertPoseToVectors returns correct results', () => {
     // without weightOption
     expect(funcs.convertPoseToVectors(mockPoseData[0])).toEqual([
