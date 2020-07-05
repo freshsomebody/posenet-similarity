@@ -3,6 +3,7 @@
   "version": "0.4.6",
   "description": "A package helps to quickly get the similarity (distance) between two poses estimated by tfjs Posenet",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": "freshsomebody/posenet-similarity",
   "jsdelivr": "dist/posenet-similarity.min.js",
   "unpkg": "dist/posenet-similarity.min.js",
