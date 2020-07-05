@@ -1,4 +1,4 @@
-import { Pose, Options, WeightOption } from '../types';
+import { Pose, Options, WeightOption, WeightOptionMode } from '../types';
 
 export function vectorizeAndNormalize(pose: Pose, options: Options): number[][] {
   let [vectorPoseXY, vecotPoseTransform, vectorPoseConfidences] = convertPoseToVectors(pose, options.customWeight);
@@ -38,12 +38,14 @@ export function convertPoseToVectors(pose: Pose, weightOption?: WeightOption): n
   let vectorScores: number[] = [];
 
   // get weightOption if exists
-  let mode: string, scores: Record<string, number> | number[];
+  let mode: WeightOptionMode, scores: Record<string, number> | number[];
   if (weightOption) {
-    mode = weightOption.mode;
-    if (typeof weightOption.scores !== 'object') throw new TypeError(`[Bad customWeight option] scores must be Object or Number[].
-      Please refer the document https://github.com/freshsomebody/posenet-similarity to set it correctly.`);
+    mode = weightOption.mode
+    if (!mode || typeof mode !== 'string') throw new TypeError(`[Bad customWeight option] A mode must be specified and should be either 'multiply', 'replace' or 'add'.`);
+
     scores = weightOption.scores
+    if (typeof scores !== 'object' && !Array.isArray(scores)) throw new TypeError(`[Bad customWeight option] scores must be Object or Number[].
+      Please refer the document https://github.com/freshsomebody/posenet-similarity to set it correctly.`);
   }
 
   pose.keypoints.forEach((point, index) => {
@@ -58,7 +60,7 @@ export function convertPoseToVectors(pose: Pose, weightOption?: WeightOption): n
 
     let score = point.score;
     // modify original score according to the weightOption
-    if (scores) {
+    if (mode && scores) {
       let scoreModifier: boolean | number = false;
       // try to get scores from the weightOption
       if (scores[point.part] || scores[point.part] === 0) scoreModifier = scores[point.part]
