@@ -17,6 +17,7 @@ export function vectorizeAndNormalize(pose: Pose, options: Options): number[][] 
  * Covert the pose to a set of vectors
  * 
  * @param pose The pose object to be converted.
+ * @param weightOption The options to manipulate pose scores
  * 
  * @return An array of vectors which stand for
  * [0] = The vector of pose keypoints x, y.
