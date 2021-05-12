@@ -1,8 +1,8 @@
-import typescript from 'rollup-plugin-typescript2';
-import { uglify } from 'rollup-plugin-uglify';
+import typescript from '@rollup/plugin-typescript';
+import { terser } from 'rollup-plugin-terser';
 
 export default {
-  input: 'src/index.ts', // our source file
+  input: 'src/index.ts',
   output: [
     {
       file: 'dist/posenet-similarity.min.js',
@@ -12,6 +12,6 @@ export default {
   ],
   plugins: [
     typescript(),
-    uglify()
+    terser()
   ]
 };

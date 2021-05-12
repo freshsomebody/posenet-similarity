@@ -1,29 +1,39 @@
-module.exports =  {
-  parser:  '@typescript-eslint/parser',  // Specifies the ESLint parser
-  extends:  [
-    'plugin:@typescript-eslint/recommended'  // Uses the recommended rules from the @typescript-eslint/eslint-plugin
-  ],
- parserOptions:  {
-    ecmaVersion:  2018,  // Allows for the parsing of modern ECMAScript features
-    sourceType:  'module'  // Allows for the use of imports
+module.exports = {
+  env: {
+    browser: true,
+    es2021: true,
+    node: true
   },
-  rules:  {
-    // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
-    // e.g. "@typescript-eslint/explicit-function-return-type": "off",
-    '@typescript-eslint/indent': ['error', 2],
-    '@typescript-eslint/member-delimiter-style': {
-      multiline: {
-        delimiter: "comma",
-        requireLast: false
+  extends: [
+    'standard',
+    "plugin:@typescript-eslint/recommended"
+  ],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 12,
+    sourceType: 'module'
+  },
+  plugins: [
+    '@typescript-eslint'
+  ],
+  rules: {
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": ["error", {
+      "functions": false,
+      "enums": false,
+      "typedefs": false
+    }],
+
+    "@typescript-eslint/member-delimiter-style": ["error", {
+      "multiline": {
+          "delimiter": "none",
+          "requireLast": false
       },
-      singleline: {
-          delimiter: "comma",
-          requireLast: false
-      }
-    },
-    '@typescript-eslint/explicit-function-return-type': { allowExpressions: true },
-    '@typescript-eslint/no-use-before-define': [
-      'error', { functions: false }
-    ]
+      "singleline": {
+          "delimiter": "comma",
+          "requireLast": false
+      },
+      "multilineDetection": "brackets"
+    }]
   }
-};
+}
